@@ -1,11 +1,28 @@
-# Pause
+<p align="center">
+  <img src="assets/icon/app_icon.png" width="92" alt="Pause" />
+</p>
 
-A modern app for an ancient practice.
-Put your phone down one day a week.
+<h1 align="center">Pause</h1>
 
-**Your people still get through. Instagram doesn’t.**
+<p align="center">
+  A modern app for an ancient practice.<br />
+  Put your phone down one day a week.
+</p>
 
-Offline first. No account. No circle. No feed. Nothing leaves this phone.
+<p align="center"><strong>Your people still get through. Instagram doesn’t.</strong></p>
+
+<p align="center">
+  Offline first. No account. No circle. No feed. Nothing leaves this phone.
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/onboarding.jpg" width="170" alt="Onboarding — Reclaim your sacred day" />
+  <img src="docs/screenshots/resting.jpg" width="170" alt="Active rest — sky, countdown, slide to pause" />
+  <img src="docs/screenshots/rest.jpg" width="170" alt="Rest home — next sacred day" />
+  <img src="docs/screenshots/schedule.jpg" width="170" alt="Create Schedule" />
+  <img src="docs/screenshots/timer.jpg" width="170" alt="Deep rest timer" />
+  <img src="docs/screenshots/recap.jpg" width="170" alt="Pause recap" />
+</p>
 
 ## What’s on the device
 
