@@ -17,6 +17,7 @@ void main() {
     final controller = PauseController()..onboardingComplete = true;
     await tester.pumpWidget(PauseApp(controller: controller));
     await tester.pump();
-    expect(find.text('Begin this Pause'), findsOneWidget);
+    expect(find.text('Begin now'), findsOneWidget);
+    expect(find.textContaining('Instagram'), findsWidgets);
   });
 }

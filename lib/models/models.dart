@@ -86,6 +86,36 @@ class Lifeline {
   final Color tint;
 }
 
+class VipPerson {
+  const VipPerson({
+    required this.id,
+    required this.name,
+    required this.relation,
+    required this.initials,
+    required this.tint,
+  });
+
+  final String id;
+  final String name;
+  final String relation;
+  final String initials;
+  final Color tint;
+}
+
+class DayIntention {
+  const DayIntention({
+    required this.id,
+    required this.phrase,
+    required this.detail,
+    required this.image,
+  });
+
+  final String id;
+  final String phrase;
+  final String detail;
+  final String image;
+}
+
 class WeekdayBlock {
   const WeekdayBlock({
     required this.id,
@@ -269,5 +299,79 @@ class Catalog {
       when: 'Weekdays, 10pm – 6am',
       imageAsset: 'assets/images/texture_sleep.png',
     ),
+  ];
+
+  static const vips = <VipPerson>[
+    VipPerson(
+      id: 'mom',
+      name: 'Mom',
+      relation: 'Family · always rings',
+      initials: 'M',
+      tint: Color(0xFFC47A6A),
+    ),
+    VipPerson(
+      id: 'jordan',
+      name: 'Jordan',
+      relation: 'Partner',
+      initials: 'J',
+      tint: Color(0xFF6E849E),
+    ),
+    VipPerson(
+      id: 'leo',
+      name: 'Leo',
+      relation: 'Kid',
+      initials: 'L',
+      tint: Color(0xFFD4A574),
+    ),
+    VipPerson(
+      id: 'school',
+      name: 'School',
+      relation: 'Pickup and nurse line',
+      initials: 'S',
+      tint: Color(0xFF4A5D4E),
+    ),
+    VipPerson(
+      id: 'sam',
+      name: 'Sam',
+      relation: 'Work · emergencies only',
+      initials: 'SA',
+      tint: Color(0xFF4A154B),
+    ),
+  ];
+
+  static const intentions = <DayIntention>[
+    DayIntention(
+      id: 'eat',
+      phrase: 'to eat slowly',
+      detail: 'Stay at the table. Let the dishes wait.',
+      image: 'assets/images/onboarding/eat_slowly.png',
+    ),
+    DayIntention(
+      id: 'present',
+      phrase: 'to be present',
+      detail: 'Be in the room you’re already in.',
+      image: 'assets/images/onboarding/be_present.png',
+    ),
+    DayIntention(
+      id: 'people',
+      phrase: 'to sit together',
+      detail: 'The people in front of you are the point.',
+      image: 'assets/images/onboarding/people.png',
+    ),
+    DayIntention(
+      id: 'day',
+      phrase: 'to keep the day',
+      detail: 'One sundown to the next. Nothing clever.',
+      image: 'assets/images/onboarding/one_day.png',
+    ),
+  ];
+
+  static const quietPrompts = <String>[
+    'They’re in the other room.',
+    'The dishes can wait.',
+    'Nobody needs a photo of this.',
+    'A walk is enough.',
+    'You already have the people.',
+    'Leave the phone face down.',
   ];
 }

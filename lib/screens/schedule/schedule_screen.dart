@@ -24,7 +24,9 @@ class ScheduleScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            const Text('Smaller blocks during the week. The sacred day stays free.'),
+            const Text(
+              'Dinner, deep work, sleep — included. The sacred day stays free.',
+            ),
             const SizedBox(height: 18),
             for (final block in c.blocks)
               Padding(
