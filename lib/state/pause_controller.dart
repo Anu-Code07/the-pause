@@ -135,6 +135,18 @@ class PauseController extends ChangeNotifier {
         .clamp(0, 14);
   }
 
+  String get remainingUntilRestLabel {
+    final until = nextRestStart.difference(DateTime.now());
+    if (until.inHours >= 24) {
+      final days = until.inHours ~/ 24;
+      return days == 1 ? '1 day until rest' : '$days days until rest';
+    }
+    if (until.inHours >= 1) {
+      return '${until.inHours}h ${until.inMinutes.remainder(60)}m until rest';
+    }
+    return '${until.inMinutes}m until rest';
+  }
+
   String get nextStartLine {
     final start = nextRestStart;
     final days = daysUntilRest;

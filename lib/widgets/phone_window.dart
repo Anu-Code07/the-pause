@@ -36,12 +36,12 @@ class PhoneWindow extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(44),
-                border: Border.all(color: const Color(0xFF2A2A2A), width: 11),
+                border: Border.all(color: const Color(0xFFC9CCD1), width: 11),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.35),
-                    blurRadius: 40,
-                    offset: const Offset(0, 18),
+                    color: Colors.black.withValues(alpha: 0.22),
+                    blurRadius: 36,
+                    offset: const Offset(0, 16),
                   ),
                 ],
               ),
@@ -49,7 +49,7 @@ class PhoneWindow extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(34),
                   border: Border.all(
-                    color: const Color(0xFF5A5A5A),
+                    color: const Color(0xFFE8E8EC),
                     width: 1.2,
                   ),
                 ),
@@ -78,7 +78,7 @@ class PhoneWindow extends StatelessWidget {
       width: 4,
       height: height,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
+        color: const Color(0xFFB8B8BE),
         borderRadius: BorderRadius.circular(2),
       ),
     );

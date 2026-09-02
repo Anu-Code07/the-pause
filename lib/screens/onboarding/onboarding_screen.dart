@@ -151,28 +151,17 @@ class _SacredDayPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              Text(
-                'Put the phone down one day a week.\nYour people still get through.\nInstagram doesn’t.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  height: 1.4,
-                  color: Colors.white.withValues(alpha: 0.9),
-                ),
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
               Expanded(
                 child: OverflowBox(
                   maxHeight: 720,
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 64),
+                    padding: const EdgeInsets.symmetric(horizontal: 72),
                     child: PhoneWindow(
                       child: Image.asset(
-                        'assets/images/onboarding/eat_slowly.png',
+                        'assets/images/dusk_sky.png',
                         fit: BoxFit.cover,
-                        alignment: const Alignment(0, 0.2),
                       ),
                     ),
                   ),
@@ -263,10 +252,10 @@ class _DayCard extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: selected ? PauseColors.ink : PauseColors.paper,
+          color: selected ? PauseColors.ink : Colors.white,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: selected ? PauseColors.ink : PauseColors.mist,
+            color: selected ? PauseColors.ink : PauseColors.hairline,
           ),
         ),
         child: Column(
@@ -389,7 +378,7 @@ class _DealPage extends StatelessWidget {
                           : PauseColors.ink,
                     ),
                     checkmarkColor: Colors.white,
-                    backgroundColor: PauseColors.paper,
+                    backgroundColor: PauseColors.mist,
                     side: BorderSide.none,
                   ),
               ],

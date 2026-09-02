@@ -3,13 +3,25 @@ import 'package:flutter/material.dart';
 class PauseColors {
   static const ink = Color(0xFF111111);
   static const inkSoft = Color(0xFF3A3A3A);
-  static const cream = Color(0xFFF6F3EE);
-  static const paper = Color(0xFFFFFCF8);
-  static const mist = Color(0xFFE8E4DC);
-  static const stone = Color(0xFF8A847A);
-  static const gold = Color(0xFFC4A574);
+  /// Cool white, not warm cream.
+  static const cream = Color(0xFFFFFFFF);
+  static const paper = Color(0xFFFFFFFF);
+  static const mist = Color(0xFFF3F3F3);
+  static const stone = Color(0xFF8E8E93);
+  static const gold = Color(0xFFC6A35A);
   static const goldDeep = Color(0xFF9C7A45);
   static const skySteel = Color(0xFF6E849E);
+  static const hairline = Color(0xFFE5E5EA);
+}
+
+class PauseShadows {
+  static final soft = [
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.06),
+      blurRadius: 24,
+      offset: const Offset(0, 10),
+    ),
+  ];
 }
 
 class PauseTheme {
@@ -61,7 +73,7 @@ class PauseTheme {
       labelLarge: TextStyle(
         fontFamily: 'Inter',
         fontSize: 15,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
         color: PauseColors.ink,
       ),
@@ -71,6 +83,8 @@ class PauseTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       scaffoldBackgroundColor: PauseColors.cream,
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
       colorScheme: const ColorScheme.light(
         primary: PauseColors.ink,
         onPrimary: PauseColors.paper,
@@ -79,7 +93,7 @@ class PauseTheme {
         secondary: PauseColors.gold,
       ),
       textTheme: textTheme,
-      splashFactory: InkRipple.splashFactory,
+      dividerColor: PauseColors.hairline,
       appBarTheme: const AppBarTheme(
         backgroundColor: PauseColors.cream,
         foregroundColor: PauseColors.ink,
@@ -87,9 +101,34 @@ class PauseTheme {
         centerTitle: true,
         titleTextStyle: TextStyle(
           fontFamily: 'Playfair Display',
-          fontSize: 24,
+          fontSize: 26,
           fontWeight: FontWeight.w500,
           color: PauseColors.ink,
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: PauseColors.ink,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: const StadiumBorder(),
+          textStyle: const TextStyle(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        filled: true,
+        fillColor: PauseColors.mist,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.all(Radius.circular(14)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.all(Radius.circular(14)),
         ),
       ),
     );

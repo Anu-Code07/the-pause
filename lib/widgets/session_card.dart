@@ -22,21 +22,15 @@ class SessionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: PauseColors.paper,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        boxShadow: PauseShadows.soft,
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           SizedBox(
-            height: 168,
+            height: 176,
             width: double.infinity,
             child: Stack(
               fit: StackFit.expand,
@@ -45,12 +39,12 @@ class SessionCard extends StatelessWidget {
                 Center(
                   child: Text(
                     '$count',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Playfair Display',
-                      fontSize: 88,
+                      fontSize: 108,
                       height: 1,
-                      color: Colors.white,
                       fontWeight: FontWeight.w500,
+                      color: Colors.white.withValues(alpha: 0.72),
                     ),
                   ),
                 ),
@@ -58,20 +52,29 @@ class SessionCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Pause',
                         style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
+                          fontFamily: 'Playfair Display',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
                           color: PauseColors.ink,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        dateLabel,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          color: PauseColors.stone,
                         ),
                       ),
                     ],
@@ -82,8 +85,8 @@ class SessionCard extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.check_circle, size: 16, color: PauseColors.goldDeep),
-                        SizedBox(width: 6),
+                        Icon(Icons.check, size: 16, color: PauseColors.ink),
+                        SizedBox(width: 4),
                         Text(
                           'Finished',
                           style: TextStyle(
@@ -94,7 +97,7 @@ class SessionCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       '${hours}h',
                       style: const TextStyle(
@@ -108,39 +111,26 @@ class SessionCard extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-            child: Row(
-              children: [
-                Text(
-                  dateLabel,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 13,
-                    color: PauseColors.stone,
-                  ),
-                ),
-              ],
-            ),
-          ),
           if (perfect)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 20),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFFD8C08A), Color(0xFF9C7A45)],
                 ),
               ),
-              child: const Text(
-                'Perfect Pause',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 12,
-                  letterSpacing: 0.6,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              child: const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Perfect Pause',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    letterSpacing: 0.2,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

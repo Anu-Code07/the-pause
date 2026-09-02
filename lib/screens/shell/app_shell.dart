@@ -37,7 +37,7 @@ class _AppShellState extends State<AppShell> {
               decoration: const BoxDecoration(
                 color: PauseColors.paper,
                 border: Border(
-                  top: BorderSide(color: PauseColors.mist, width: 0.6),
+                  top: BorderSide(color: PauseColors.hairline, width: 0.5),
                 ),
               ),
               child: SafeArea(

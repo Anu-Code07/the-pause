@@ -21,13 +21,19 @@ class SelectTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? PauseColors.ink : PauseColors.paper,
+      color: selected ? PauseColors.ink : Colors.white,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(18),
-        child: Padding(
+        child: Container(
           padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: selected ? PauseColors.ink : PauseColors.hairline,
+            ),
+          ),
           child: Row(
             children: [
               if (leading != null) ...[leading!, const SizedBox(width: 12)],

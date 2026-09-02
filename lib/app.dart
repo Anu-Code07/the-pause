@@ -31,13 +31,13 @@ class PauseApp extends StatelessWidget {
                   if (!framed) return content;
                   final height = math.min(844.0, constraints.maxHeight - 32);
                   return ColoredBox(
-                    color: const Color(0xFFD9D1C4),
+                    color: const Color(0xFFE8E8E8),
                     child: Center(
                       child: Container(
                         width: 390,
                         height: height,
                         decoration: BoxDecoration(
-                          color: PauseColors.cream,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(36),
                           boxShadow: [
                             BoxShadow(

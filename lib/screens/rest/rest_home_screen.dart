@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/models.dart';
@@ -33,98 +34,108 @@ class _Upcoming extends StatelessWidget {
       backgroundColor: PauseColors.cream,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 40),
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 40),
           children: [
             const Text(
               'Pause',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Playfair Display',
-                fontSize: 40,
+                fontSize: 34,
+                height: 1.05,
+                fontWeight: FontWeight.w500,
                 color: PauseColors.ink,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               c.autoStart
                   ? 'Starts on its own · ${c.nextStartLine}'
                   : c.nextStartLine,
-              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                color: PauseColors.stone,
+              ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
             ClipRRect(
               borderRadius: BorderRadius.circular(24),
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: 260,
-                    width: double.infinity,
-                    child: Image.asset(
-                      c.intention.image,
+              child: SizedBox(
+                height: 300,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.asset(
+                      'assets/images/dusk_sky.png',
                       fit: BoxFit.cover,
                     ),
-                  ),
-                  Positioned.fill(
-                    child: DecoratedBox(
+                    DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.black.withValues(alpha: 0.05),
-                            Colors.black.withValues(alpha: 0.55),
+                            Colors.black.withValues(alpha: 0.04),
+                            Colors.black.withValues(alpha: 0.42),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    left: 22,
-                    right: 22,
-                    bottom: 20,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          c.intention.phrase,
-                          style: const TextStyle(
-                            fontFamily: 'Playfair Display',
-                            fontSize: 32,
-                            color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            c.remainingUntilRestLabel,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              color: Colors.white.withValues(alpha: 0.92),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          c.promiseLine,
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            color: Colors.white.withValues(alpha: 0.9),
+                          const Spacer(),
+                          Text(
+                            c.intention.phrase,
+                            style: const TextStyle(
+                              fontFamily: 'Playfair Display',
+                              fontSize: 34,
+                              height: 1.05,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 4),
+                          Text(
+                            c.promiseLine,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 14,
+                              color: Colors.white.withValues(alpha: 0.9),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () => c.startRest(),
-              style: FilledButton.styleFrom(
-                backgroundColor: PauseColors.ink,
-                foregroundColor: Colors.white,
-                minimumSize: const Size.fromHeight(54),
-                shape: const StadiumBorder(),
+            SizedBox(
+              height: 54,
+              child: FilledButton(
+                onPressed: () {
+                  HapticFeedback.mediumImpact();
+                  c.startRest();
+                },
+                child: const Text('Begin now'),
               ),
-              child: const Text('Begin now'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 28),
             const Text(
-              'Leave the phone in another room if you can. The day is not on the lock screen.',
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Still reaches you',
+              'Who still reaches you',
               style: TextStyle(
                 fontFamily: 'Playfair Display',
                 fontSize: 22,
@@ -132,55 +143,136 @@ class _Upcoming extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final vip in c.activeVips)
-                  Chip(
-                    avatar: PersonDot(
-                      initials: vip.initials,
-                      tint: vip.tint,
-                      radius: 10,
+            _WhiteCard(
+              child: Column(
+                children: [
+                  for (final vip in c.activeVips)
+                    _QuietRow(
+                      leading: PersonDot(
+                        initials: vip.initials,
+                        tint: vip.tint,
+                        radius: 14,
+                      ),
+                      title: vip.name,
+                      subtitle: vip.relation,
                     ),
-                    label: Text(vip.name),
-                    backgroundColor: PauseColors.paper,
-                    side: BorderSide.none,
-                  ),
-                for (final line in c.activeLifelines)
-                  Chip(
-                    avatar: Icon(line.icon, size: 14, color: Colors.white),
-                    label: Text(line.name),
-                    backgroundColor: line.tint,
-                    labelStyle: const TextStyle(color: Colors.white),
-                    side: BorderSide.none,
-                  ),
-              ],
-            ),
-            const SizedBox(height: 18),
-            const Text(
-              'Goes quiet',
-              style: TextStyle(
-                fontFamily: 'Playfair Display',
-                fontSize: 22,
+                  for (final line in c.activeLifelines)
+                    _QuietRow(
+                      leading: Icon(line.icon, size: 20, color: PauseColors.ink),
+                      title: line.name,
+                      subtitle: line.subtitle,
+                    ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final app in c.blockedApps)
-                  Chip(
-                    avatar: Icon(app.icon, size: 14, color: Colors.white),
-                    label: Text(app.name),
-                    backgroundColor: app.tint,
-                    labelStyle: const TextStyle(color: Colors.white, fontSize: 12),
-                    side: BorderSide.none,
+            const SizedBox(height: 14),
+            _WhiteCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Goes quiet',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                      color: PauseColors.ink,
+                    ),
                   ),
-              ],
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final app in c.blockedApps)
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: app.tint,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Icon(app.icon, size: 15, color: Colors.white),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _WhiteCard extends StatelessWidget {
+  const _WhiteCard({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: PauseShadows.soft,
+          border: Border.all(color: PauseColors.hairline),
+        ),
+        child: child,
+      ),
+    );
+  }
+}
+
+class _QuietRow extends StatelessWidget {
+  const _QuietRow({
+    required this.leading,
+    required this.title,
+    required this.subtitle,
+  });
+
+  final Widget leading;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          leading,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    color: PauseColors.ink,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    color: PauseColors.stone,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -234,6 +326,10 @@ class _ActiveRestState extends State<_ActiveRest> {
   Widget build(BuildContext context) {
     final c = PauseScope.of(context);
     final paused = c.status == RestStatus.paused;
+    final until = DateFormat('h:mma')
+        .format(c.restEndsAt ?? DateTime.now())
+        .toLowerCase()
+        .replaceAll(' ', '');
 
     return Scaffold(
       body: Stack(
@@ -243,14 +339,46 @@ class _ActiveRestState extends State<_ActiveRest> {
             asset: paused
                 ? 'assets/images/sunrise_sky.png'
                 : 'assets/images/dusk_sky.png',
-            darken: 0.22,
+            darken: paused ? 0.18 : 0.08,
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(22, 8, 22, 18),
+              padding: const EdgeInsets.fromLTRB(24, 10, 24, 22),
               child: Column(
                 children: [
-                  _StatusRow(paused: paused),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 6,
+                    children: [
+                      Text(
+                        paused ? 'Open until' : 'Blocking',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          color: Colors.white.withValues(alpha: 0.92),
+                        ),
+                      ),
+                      for (final app in c.blockedApps.take(4))
+                        Container(
+                          width: 22,
+                          height: 22,
+                          decoration: BoxDecoration(
+                            color: app.tint,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Icon(app.icon, size: 12, color: Colors.white),
+                        ),
+                      Text(
+                        'until $until',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          color: Colors.white.withValues(alpha: 0.92),
+                        ),
+                      ),
+                    ],
+                  ),
                   if (_banner != null) ...[
                     const SizedBox(height: 14),
                     _Banner(
@@ -259,22 +387,15 @@ class _ActiveRestState extends State<_ActiveRest> {
                       onDismiss: () => setState(() => _banner = null),
                     ),
                   ],
-                  const Spacer(),
+                  const Spacer(flex: 3),
                   Text(
                     paused ? 'Paused' : 'Pause',
                     style: const TextStyle(
                       fontFamily: 'Playfair Display',
-                      fontSize: 56,
+                      fontSize: 72,
+                      height: 0.95,
+                      fontWeight: FontWeight.w500,
                       color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    c.intention.phrase,
-                    style: TextStyle(
-                      fontFamily: 'Playfair Display',
-                      fontStyle: FontStyle.italic,
-                      fontSize: 20,
-                      color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -283,18 +404,11 @@ class _ActiveRestState extends State<_ActiveRest> {
                     style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 18,
+                      letterSpacing: 0.4,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    c.quietPromptAt(DateTime.now()),
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      color: Colors.white.withValues(alpha: 0.75),
-                    ),
-                  ),
-                  const Spacer(),
+                  const Spacer(flex: 4),
                   if (paused)
                     FilledButton(
                       onPressed: c.resumeRest,
@@ -302,7 +416,6 @@ class _ActiveRestState extends State<_ActiveRest> {
                         backgroundColor: Colors.white,
                         foregroundColor: PauseColors.ink,
                         minimumSize: const Size.fromHeight(54),
-                        shape: const StadiumBorder(),
                       ),
                       child: const Text('Return to rest'),
                     )
@@ -311,12 +424,13 @@ class _ActiveRestState extends State<_ActiveRest> {
                       label: 'slide to pause',
                       onCompleted: () => _askReason(context),
                     ),
+                  const SizedBox(height: 8),
                   TextButton(
                     onPressed: c.completeRest,
                     child: Text(
                       'End this Pause',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: Colors.white.withValues(alpha: 0.62),
                       ),
                     ),
                   ),
@@ -335,7 +449,7 @@ class _ActiveRestState extends State<_ActiveRest> {
     final reason = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: PauseColors.paper,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -368,7 +482,6 @@ class _ActiveRestState extends State<_ActiveRest> {
                 autofocus: true,
                 decoration: const InputDecoration(
                   hintText: 'Needed maps, a work ping, a call…',
-                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
@@ -380,7 +493,6 @@ class _ActiveRestState extends State<_ActiveRest> {
                       : controller.text.trim(),
                 ),
                 style: FilledButton.styleFrom(
-                  backgroundColor: PauseColors.ink,
                   minimumSize: const Size.fromHeight(50),
                 ),
                 child: const Text('Pause for 15 minutes'),
@@ -449,43 +561,6 @@ class _Banner extends StatelessWidget {
   }
 }
 
-class _StatusRow extends StatelessWidget {
-  const _StatusRow({required this.paused});
-
-  final bool paused;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = PauseScope.of(context);
-    return Column(
-      children: [
-        Text(
-          paused
-              ? 'Temporarily open'
-              : 'Quiet until ${DateFormat.jm().format(c.restEndsAt ?? DateTime.now())}',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 13,
-            color: Colors.white.withValues(alpha: 0.9),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          c.activeVips.isEmpty
-              ? c.promiseLine
-              : '${c.activeVips.map((v) => v.name).join(', ')} can still reach you',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 12,
-            color: Colors.white.withValues(alpha: 0.78),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _Recap extends StatelessWidget {
   const _Recap();
 
@@ -498,24 +573,26 @@ class _Recap extends StatelessWidget {
       backgroundColor: PauseColors.cream,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 28, 24, 40),
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 40),
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                onPressed: c.dismissRecap,
+                icon: const Icon(Icons.close, color: PauseColors.ink),
+              ),
+            ),
             Text(
               perfect ? 'You kept the day' : 'You finished your Pause',
-              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontFamily: 'Playfair Display',
                 fontSize: 34,
-                height: 1.15,
+                height: 1.12,
+                fontWeight: FontWeight.w500,
                 color: PauseColors.ink,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              c.intention.detail,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 18),
             SessionCard(
               count: c.completedCount,
               dateLabel: DateFormat.MMMMd().format(DateTime.now()),
@@ -534,33 +611,44 @@ class _Recap extends StatelessWidget {
                   subtitle: Text(DateFormat.jm().format(b.at)),
                 ),
             ],
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: PauseShadows.soft,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'A note to yourself',
+                    style: TextStyle(
+                      fontFamily: 'Playfair Display',
+                      fontSize: 20,
+                      color: PauseColors.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: note,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      hintText: 'What was the day actually like?',
+                    ),
+                    onChanged: c.setWeeklyNote,
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 22),
-            const Text(
-              'A note to yourself',
-              style: TextStyle(
-                fontFamily: 'Playfair Display',
-                fontSize: 22,
+            SizedBox(
+              height: 54,
+              child: FilledButton(
+                onPressed: c.dismissRecap,
+                child: const Text('Done'),
               ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: note,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                hintText: 'What was the day actually like?',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: c.setWeeklyNote,
-            ),
-            const SizedBox(height: 28),
-            FilledButton(
-              onPressed: c.dismissRecap,
-              style: FilledButton.styleFrom(
-                backgroundColor: PauseColors.ink,
-                minimumSize: const Size.fromHeight(54),
-                shape: const StadiumBorder(),
-              ),
-              child: const Text('Back to the week'),
             ),
           ],
         ),
