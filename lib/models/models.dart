@@ -20,49 +20,6 @@ class DistractingApp {
   final String category;
 }
 
-class CircleFriend {
-  const CircleFriend({
-    required this.id,
-    required this.name,
-    required this.initials,
-    required this.tint,
-    this.isResting = false,
-    this.pauses = 0,
-    this.pauseReason,
-    this.finished = false,
-    this.hours = 24,
-  });
-
-  final String id;
-  final String name;
-  final String initials;
-  final Color tint;
-  final bool isResting;
-  final int pauses;
-  final String? pauseReason;
-  final bool finished;
-  final int hours;
-
-  CircleFriend copyWith({
-    bool? isResting,
-    int? pauses,
-    String? pauseReason,
-    bool? finished,
-  }) {
-    return CircleFriend(
-      id: id,
-      name: name,
-      initials: initials,
-      tint: tint,
-      isResting: isResting ?? this.isResting,
-      pauses: pauses ?? this.pauses,
-      pauseReason: pauseReason ?? this.pauseReason,
-      finished: finished ?? this.finished,
-      hours: hours,
-    );
-  }
-}
-
 class PauseBreak {
   const PauseBreak({required this.reason, required this.at});
 
@@ -225,46 +182,6 @@ class Catalog {
       subtitle: 'In case you need to get somewhere.',
       icon: Icons.map_rounded,
       tint: Color(0xFFC47A6A),
-    ),
-  ];
-
-  static const friends = <CircleFriend>[
-    CircleFriend(
-      id: 'maya',
-      name: 'Maya',
-      initials: 'M',
-      tint: Color(0xFFC47A6A),
-      isResting: true,
-    ),
-    CircleFriend(
-      id: 'ben',
-      name: 'Ben',
-      initials: 'B',
-      tint: Color(0xFF6E849E),
-      isResting: true,
-    ),
-    CircleFriend(
-      id: 'sky',
-      name: 'Sky',
-      initials: 'S',
-      tint: Color(0xFFD4A574),
-      isResting: true,
-    ),
-    CircleFriend(
-      id: 'vlad',
-      name: 'Vlad',
-      initials: 'V',
-      tint: Color(0xFF4A5D4E),
-      finished: true,
-    ),
-    CircleFriend(
-      id: 'noor',
-      name: 'Noor',
-      initials: 'N',
-      tint: Color(0xFF8B6B9E),
-      pauses: 1,
-      pauseReason: 'Needed maps',
-      finished: true,
     ),
   ];
 

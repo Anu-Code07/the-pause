@@ -18,7 +18,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _page = PageController();
   int _index = 0;
 
-  static const _last = 4;
+  static const _last = 3;
 
   void _next() {
     if (_index >= _last) {
@@ -51,7 +51,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               _SacredDayPage(),
               _DayPage(),
               _DealPage(),
-              _CirclePage(),
               _BeginPage(),
             ],
           ),
@@ -154,7 +153,7 @@ class _SacredDayPage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Put the phone down one day a week.\nYour family still gets through.\nInstagram doesn’t.',
+                'Put the phone down one day a week.\nYour people still get through.\nInstagram doesn’t.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Inter',
@@ -394,66 +393,6 @@ class _DealPage extends StatelessWidget {
                     side: BorderSide.none,
                   ),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CirclePage extends StatelessWidget {
-  const _CirclePage();
-
-  @override
-  Widget build(BuildContext context) {
-    final c = PauseScope.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 28, 24, 140),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Who you’re\ndoing it with',
-              style: TextStyle(
-                fontFamily: 'Playfair Display',
-                fontSize: 34,
-                height: 1.1,
-                color: PauseColors.ink,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Rest is easier when someone else put their phone down too.',
-            ),
-            const SizedBox(height: 18),
-            Expanded(
-              child: ListView(
-                children: [
-                  for (final f in Catalog.friends) ...[
-                    SelectTile(
-                      label: f.name,
-                      subtitle: f.isResting ? 'Often rests on the weekend' : 'Invite to your table',
-                      selected: c.circleIds.contains(f.id),
-                      onTap: () => c.toggleCircle(f.id),
-                      leading: PersonDot(
-                        initials: f.initials,
-                        tint: f.tint,
-                        radius: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ],
-              ),
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Household rest'),
-              subtitle: const Text('Everyone at the table goes quiet together.'),
-              value: c.householdMode,
-              onChanged: c.setHouseholdMode,
             ),
           ],
         ),

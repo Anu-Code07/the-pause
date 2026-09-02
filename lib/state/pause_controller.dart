@@ -12,8 +12,6 @@ class PauseController extends ChangeNotifier {
   String name = 'You';
   RestDay restDay = RestDay.sunday;
   bool autoStart = true;
-  bool householdMode = true;
-  bool strictPause = false;
   int sundownHour = 19;
   String intentionId = 'eat';
   String weeklyNote = '';
@@ -21,9 +19,7 @@ class PauseController extends ChangeNotifier {
   final Set<String> blockedAppIds = {'instagram', 'tiktok', 'x', 'youtube'};
   final Set<String> lifelineIds = {'phone', 'messages', 'slack'};
   final Set<String> vipIds = {'mom', 'jordan'};
-  final Set<String> circleIds = {};
 
-  List<CircleFriend> friends = List.of(Catalog.friends);
   List<WeekdayBlock> blocks = List.of(Catalog.blocks);
 
   RestStatus status = RestStatus.upcoming;
@@ -38,7 +34,6 @@ class PauseController extends ChangeNotifier {
   int timerMinutes = 20;
   DateTime? timerEndsAt;
   bool timerRunning = false;
-  String? pendingPauseAsk;
 
   Timer? _ticker;
 
@@ -50,12 +45,6 @@ class PauseController extends ChangeNotifier {
 
   List<VipPerson> get activeVips =>
       Catalog.vips.where((v) => vipIds.contains(v.id)).toList();
-
-  List<CircleFriend> get circle =>
-      friends.where((f) => circleIds.contains(f.id)).toList();
-
-  List<CircleFriend> get restingCircle =>
-      circle.where((f) => f.isResting).toList();
 
   DayIntention get intention => Catalog.intentions.firstWhere(
         (i) => i.id == intentionId,
@@ -176,8 +165,6 @@ class PauseController extends ChangeNotifier {
           ? RestDay.saturday
           : RestDay.sunday;
       autoStart = prefs.getBool('autoStart') ?? true;
-      householdMode = prefs.getBool('household') ?? true;
-      strictPause = prefs.getBool('strictPause') ?? false;
       sundownHour = prefs.getInt('sundownHour') ?? 19;
       intentionId = prefs.getString('intention') ?? intentionId;
       weeklyNote = prefs.getString('weeklyNote') ?? '';
@@ -198,12 +185,6 @@ class PauseController extends ChangeNotifier {
         vipIds
           ..clear()
           ..addAll(vips);
-      }
-      final circle = prefs.getStringList('circle');
-      if (circle != null) {
-        circleIds
-          ..clear()
-          ..addAll(circle);
       }
       final enabledBlocks = prefs.getStringList('blocks') ?? [];
       blocks = [
@@ -226,15 +207,12 @@ class PauseController extends ChangeNotifier {
         restDay == RestDay.saturday ? 'saturday' : 'sunday',
       );
       await prefs.setBool('autoStart', autoStart);
-      await prefs.setBool('household', householdMode);
-      await prefs.setBool('strictPause', strictPause);
       await prefs.setInt('sundownHour', sundownHour);
       await prefs.setString('intention', intentionId);
       await prefs.setString('weeklyNote', weeklyNote);
       await prefs.setStringList('apps', blockedAppIds.toList());
       await prefs.setStringList('lifelines', lifelineIds.toList());
       await prefs.setStringList('vips', vipIds.toList());
-      await prefs.setStringList('circle', circleIds.toList());
       await prefs.setStringList(
         'blocks',
         blocks.where((b) => b.enabled).map((b) => b.id).toList(),
@@ -259,18 +237,6 @@ class PauseController extends ChangeNotifier {
     _persist();
     notifyListeners();
     if (value) maybeAutoStart();
-  }
-
-  void setHouseholdMode(bool value) {
-    householdMode = value;
-    _persist();
-    notifyListeners();
-  }
-
-  void setStrictPause(bool value) {
-    strictPause = value;
-    _persist();
-    notifyListeners();
   }
 
   void setSundownHour(int hour) {
@@ -311,43 +277,6 @@ class PauseController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleCircle(String id) {
-    if (circleIds.contains(id)) {
-      circleIds.remove(id);
-    } else {
-      circleIds.add(id);
-    }
-    _persist();
-    notifyListeners();
-  }
-
-  void addPersonToCircle(String raw) {
-    final trimmed = raw.trim();
-    if (trimmed.isEmpty) return;
-    final id = trimmed.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-');
-    if (!friends.any((f) => f.id == id)) {
-      const tints = [
-        Color(0xFFC47A6A),
-        Color(0xFF6E849E),
-        Color(0xFF4A5D4E),
-        Color(0xFF8B6B9E),
-        Color(0xFFD4A574),
-      ];
-      friends = [
-        ...friends,
-        CircleFriend(
-          id: id,
-          name: trimmed,
-          initials: trimmed[0].toUpperCase(),
-          tint: tints[friends.length % tints.length],
-        ),
-      ];
-    }
-    circleIds.add(id);
-    _persist();
-    notifyListeners();
-  }
-
   void toggleApp(String id) {
     if (blockedAppIds.contains(id)) {
       if (blockedAppIds.length > 1) blockedAppIds.remove(id);
@@ -360,9 +289,6 @@ class PauseController extends ChangeNotifier {
 
   void finishOnboarding() {
     onboardingComplete = true;
-    if (circleIds.isEmpty) {
-      circleIds.addAll(['maya', 'ben']);
-    }
     _persist();
     _ensureTicker();
     maybeAutoStart();
@@ -403,7 +329,6 @@ class PauseController extends ChangeNotifier {
       restEndsAt = DateTime.now().add(const Duration(hours: 24));
     }
     pauseEndsAt = null;
-    pendingPauseAsk = null;
     breaks.clear();
     _ensureTicker();
     notifyListeners();
@@ -411,27 +336,6 @@ class PauseController extends ChangeNotifier {
 
   void takeBreak(String reason) {
     if (status != RestStatus.active) return;
-    if (strictPause && circle.isNotEmpty) {
-      pendingPauseAsk = reason;
-      notifyListeners();
-      return;
-    }
-    _applyBreak(reason);
-  }
-
-  void approvePause() {
-    final reason = pendingPauseAsk;
-    if (reason == null) return;
-    pendingPauseAsk = null;
-    _applyBreak(reason);
-  }
-
-  void denyPause() {
-    pendingPauseAsk = null;
-    notifyListeners();
-  }
-
-  void _applyBreak(String reason) {
     breaks.add(PauseBreak(reason: reason, at: DateTime.now()));
     status = RestStatus.paused;
     pauseEndsAt = DateTime.now().add(const Duration(minutes: 15));
@@ -449,7 +353,6 @@ class PauseController extends ChangeNotifier {
     if (!isResting) return;
     status = RestStatus.finished;
     pauseEndsAt = null;
-    pendingPauseAsk = null;
     completedWindowEnd = restEndsAt ?? currentWindowEnd;
     if (breaks.isEmpty) streak += 1;
     completedCount += 1;
@@ -508,7 +411,7 @@ class PauseController extends ChangeNotifier {
         timerRunning = false;
         timerEndsAt = null;
         notifyListeners();
-      } else if (isResting || timerRunning || pendingPauseAsk != null) {
+      } else if (isResting || timerRunning) {
         notifyListeners();
       }
     });

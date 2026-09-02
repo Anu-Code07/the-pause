@@ -107,30 +107,6 @@ class _Upcoming extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            if (c.circle.isNotEmpty) ...[
-              Row(
-                children: [
-                  for (final f in c.circle.take(5))
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6),
-                      child: PersonDot(
-                        initials: f.initials,
-                        tint: f.tint,
-                        radius: 16,
-                      ),
-                    ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      c.householdMode
-                          ? '${c.circle.map((f) => f.name).take(3).join(', ')} rest with this house.'
-                          : '${c.circle.map((f) => f.name).take(3).join(', ')} will rest with you.',
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-            ],
             FilledButton(
               onPressed: () => c.startRest(),
               style: FilledButton.styleFrom(
@@ -257,8 +233,6 @@ class _ActiveRestState extends State<_ActiveRest> {
   @override
   Widget build(BuildContext context) {
     final c = PauseScope.of(context);
-    final resting = c.restingCircle;
-    final names = resting.map((f) => f.name).join(' and ');
     final paused = c.status == RestStatus.paused;
 
     return Scaffold(
@@ -321,38 +295,7 @@ class _ActiveRestState extends State<_ActiveRest> {
                     ),
                   ),
                   const Spacer(),
-                  if (resting.isNotEmpty) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        for (final f in resting.take(4))
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: PersonDot(
-                              initials: f.initials,
-                              tint: f.tint,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$names ${resting.length == 1 ? 'is' : 'are'} resting now.',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        color: Colors.white.withValues(alpha: 0.9),
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                  ],
-                  if (c.pendingPauseAsk != null)
-                    _AskCard(
-                      reason: c.pendingPauseAsk!,
-                      friend: c.circle.isEmpty ? 'your circle' : c.circle.first.name,
-                      onYes: c.approvePause,
-                      onNo: c.denyPause,
-                    )
-                  else if (paused)
+                  if (paused)
                     FilledButton(
                       onPressed: c.resumeRest,
                       style: FilledButton.styleFrom(
@@ -408,20 +351,16 @@ class _ActiveRestState extends State<_ActiveRest> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                c.strictPause
-                    ? 'Ask your circle'
-                    : 'Why are you pausing?',
-                style: const TextStyle(
+              const Text(
+                'Why are you pausing?',
+                style: TextStyle(
                   fontFamily: 'Playfair Display',
                   fontSize: 26,
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                c.strictPause
-                    ? 'Someone at your table has to say yes. Friction, on purpose.'
-                    : 'This is visible to your circle. Friction, not a lock.',
+              const Text(
+                'This stays on your phone. Friction, not a lock.',
               ),
               const SizedBox(height: 16),
               TextField(
@@ -444,9 +383,7 @@ class _ActiveRestState extends State<_ActiveRest> {
                   backgroundColor: PauseColors.ink,
                   minimumSize: const Size.fromHeight(50),
                 ),
-                child: Text(
-                  c.strictPause ? 'Send to circle' : 'Pause for 15 minutes',
-                ),
+                child: const Text('Pause for 15 minutes'),
               ),
             ],
           ),
@@ -507,75 +444,6 @@ class _Banner extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _AskCard extends StatelessWidget {
-  const _AskCard({
-    required this.reason,
-    required this.friend,
-    required this.onYes,
-    required this.onNo,
-  });
-
-  final String reason;
-  final String friend;
-  final VoidCallback onYes;
-  final VoidCallback onNo;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Waiting on $friend',
-            style: const TextStyle(
-              fontFamily: 'Playfair Display',
-              fontSize: 22,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            reason,
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.85)),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: onNo,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.white24,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Keep resting'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: FilledButton(
-                  onPressed: onYes,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: PauseColors.ink,
-                  ),
-                  child: const Text('Allow 15 min'),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -654,16 +522,10 @@ class _Recap extends StatelessWidget {
               hours: 24,
               perfect: perfect,
             ),
-            if (c.circle.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(
-                '${c.circle.map((f) => f.name).join(', ')} kept it with you.',
-              ),
-            ],
             if (!perfect) ...[
               const SizedBox(height: 16),
               Text(
-                'You paused ${c.breaks.length} ${c.breaks.length == 1 ? 'time' : 'times'}. Your circle can see why.',
+                'You paused ${c.breaks.length} ${c.breaks.length == 1 ? 'time' : 'times'}. That note stays here.',
               ),
               for (final b in c.breaks)
                 ListTile(

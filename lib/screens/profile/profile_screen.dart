@@ -26,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            const Text('Everything is included. There is no plus tier.'),
+            const Text('Offline. Nothing leaves this phone.'),
             const SizedBox(height: 18),
             TextField(
               controller: TextEditingController(text: c.name),
@@ -84,20 +84,6 @@ class ProfileScreen extends StatelessWidget {
               subtitle: const Text('No weekly tap. Sundown is the button.'),
               value: c.autoStart,
               onChanged: c.setAutoStart,
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Household rest'),
-              subtitle: const Text('Everyone at the table goes quiet together.'),
-              value: c.householdMode,
-              onChanged: c.setHouseholdMode,
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Circle must approve a pause'),
-              subtitle: const Text('Harder to cheat. Still not a prison.'),
-              value: c.strictPause,
-              onChanged: c.setStrictPause,
             ),
             const Divider(height: 32),
             const Text(
